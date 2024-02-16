@@ -2,11 +2,15 @@ using Asp.Versioning;
 using Microsoft.Extensions.Options;
 using ProjectManagement.Api.Config.GlobalError;
 using ProjectManagement.Api.Config.Swagger;
+using ProjectManagement.Domain.Utility;
+using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddSingleton<ILoggerManager, LoggerManager>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -39,6 +43,10 @@ builder.Services.AddApiVersioning(opt =>
 builder.Services.AddExceptionHandler<ErrorHandler>();
 builder.Services.AddProblemDetails();
 
+//Configure Serilog
+//builder.Host.UseSerilog((context, configuration) =>
+//    configuration.ReadFrom.Configuration(context.Configuration));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -58,6 +66,8 @@ if (app.Environment.IsDevelopment())
         }
     });
 }
+
+//app.UseSerilogRequestLogging();   
 
 app.UseHttpsRedirection();
 
