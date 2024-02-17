@@ -11,11 +11,17 @@
     <PackageReference Include="Asp.Versioning.Mvc" Version="8.0.0" />
     <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Controllers\V3\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ProjectManagement.Domain\ProjectManagement.Domain.csproj" />
+    <ProjectReference Include="..\ProjectManagement.Infrastructure\ProjectManagement.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
