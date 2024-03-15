@@ -1,16 +1,33 @@
 using Asp.Versioning;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using ProjectManagement.Api.Config.GlobalError;
 using ProjectManagement.Api.Config.Swagger;
+using ProjectManagement.Domain.IRepository;
+using ProjectManagement.Domain.Services;
+using ProjectManagement.Domain.Services.Interfaces;
 using ProjectManagement.Domain.Utility;
-using Serilog;
+using ProjectManagement.Infrastructure.Data;
+using ProjectManagement.Infrastructure.Repository;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(connectionString));
+
+builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
+
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddSingleton<ILoggerManager, LoggerManager>();
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services.AddScoped<IDeveloperService, DeveloperService>();
+builder.Services.AddScoped<IAchievementService, AchievementService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
