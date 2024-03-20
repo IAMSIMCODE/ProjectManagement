@@ -26,6 +26,15 @@ namespace ProjectManagement.Api.Controllers.V1
         }
 
         [HttpGet]
+        [Route("ApiDeveloper")]
+        public async Task<IActionResult> GetApiDevelopers()
+        {
+            var developers = await _developerService.GetApiDevelopers();
+            if (developers == null) { return NotFound(); }
+            return Ok(developers);
+        }
+
+        [HttpGet]
         [Route("{developerId:guid}")]
         public async Task<IActionResult> GetDeveloperAndAchievements(Guid developerId)
         {
