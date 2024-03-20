@@ -15,4 +15,25 @@
 
         public virtual ICollection<Achievement> Achievements { get; set; }
     }
+
+
+
+    public class Rootobject
+    {
+        public Class1[] Property1 { get; set; }
+    }
+
+    public class Class1
+    {
+        public string developerId { get; set; }
+        public string fullName { get; set; }
+        public string devNumber { get; set; }
+        public DateTime dateOfBirth { get; set; }
+    }
+
+
+
+ 
+
+
 }

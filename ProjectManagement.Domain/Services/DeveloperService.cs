@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
+using Newtonsoft.Json;
 using ProjectManagement.Domain.IRepository;
 using ProjectManagement.Domain.Models;
 using ProjectManagement.Domain.Models.DTO.Request;
 using ProjectManagement.Domain.Models.DTO.Response;
+using ProjectManagement.Domain.Models.Http;
 using ProjectManagement.Domain.Services.Interfaces;
 using ProjectManagement.Domain.Utility;
 using System.Diagnostics.CodeAnalysis;
+using static ProjectManagement.Domain.Models.Enums;
 
 namespace ProjectManagement.Domain.Services
 {
@@ -14,12 +17,14 @@ namespace ProjectManagement.Domain.Services
         private readonly IRepositoryManager _repositoryManager;
         private readonly ILoggerManager _loggerManager;
         private readonly IMapper _mapper;
+        private readonly IHttpService _httpService;
 
-        public DeveloperService(IRepositoryManager repositoryManager, ILoggerManager loggerManager, IMapper mapper)
+        public DeveloperService(IRepositoryManager repositoryManager, ILoggerManager loggerManager, IMapper mapper, IHttpService httpService)
         {
             _repositoryManager = repositoryManager;
             _loggerManager = loggerManager;
             _mapper = mapper;
+            _httpService = httpService;
         }
 
         public async Task<List<GetDeveloperResponse>> GetAll()
@@ -72,6 +77,29 @@ namespace ProjectManagement.Domain.Services
 
             if (!result) { return false; }
             return result;
+        }
+
+        public async Task<List<Rootobject>> GetApiDevelopers()
+        {
+            var dev = await _httpService.SendAsync(new HttpRequest
+            {
+                ApiMethod = ApiMethod.GET,
+                ApiUrl = "https://localhost:44395/api/v2/Developer",
+                Data = new List<Rootobject> {  new Rootobject() { } }
+            });
+
+            if (dev == null) { return null; }
+
+            List<Rootobject> rootobjects = new List<Rootobject>();
+            
+            var rotObj = JsonConvert.DeserializeObject<List<Class1>>(dev.Result.ToString());
+
+            rootobjects.Add(new Rootobject
+            {
+                Property1 = rotObj.ToArray()
+            });
+
+            return rootobjects;
         }
     }
 }
