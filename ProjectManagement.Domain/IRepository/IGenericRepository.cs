@@ -1,5 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using ProjectManagement.Domain.Pagination;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
+using X.PagedList;
 
 namespace ProjectManagement.Domain.IRepository
 {
@@ -7,6 +9,9 @@ namespace ProjectManagement.Domain.IRepository
     {
         Task<List<T>> GetAllAsync(Expression<Func<T, bool>> expression = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
             string include = "", bool trackChanges = true, CancellationToken cancellationToken = default);
+
+        Task<IPagedList<T>> GetAll(RequestParams requestParams, List<string> includes = null);
+
         Task<T> GetSingleByCondition(Expression<Func<T, bool>> expression);
         Task<T> GetByIdAsync(Guid id);
         Task<T> InsertAsync([NotNull] T entity);

@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagement.Domain.Models.DTO.Request;
+using ProjectManagement.Domain.Pagination;
 using ProjectManagement.Domain.Services.Interfaces;
 using ProjectManagement.Domain.Utility;
 
@@ -21,6 +22,14 @@ namespace ProjectManagement.Api.Controllers.V1
         public async Task<IActionResult> GetDevelopers()
         {
             var developers = await _developerService.GetAll();
+            if (developers == null) { return NotFound(); }
+            return Ok(developers);
+        }
+
+        [HttpGet("pageList")]
+        public async Task<IActionResult> GetPageList([FromQuery] RequestParams requestParams)
+        {
+            var developers = await _developerService.GetPageList(requestParams);
             if (developers == null) { return NotFound(); }
             return Ok(developers);
         }
