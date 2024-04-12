@@ -1,9 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using ProjectManagement.Domain.IRepository;
+using ProjectManagement.Domain.Pagination;
 using ProjectManagement.Infrastructure.Data;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
+using X.PagedList;
 
 namespace ProjectManagement.Infrastructure.Repository
 {
@@ -37,6 +40,21 @@ namespace ProjectManagement.Infrastructure.Repository
                 return await orderBy(query).AsNoTracking().ToListAsync(cancellationToken: cancellationToken);
             }
             else { return await query.AsNoTracking().ToListAsync(cancellationToken: cancellationToken); }
+        }
+
+        public async Task<IPagedList<T>> GetAll(RequestParams requestParams, List<string> includes = null)
+        {
+            IQueryable<T> query = _dbSet;
+            
+            if (includes != null)
+            {
+                foreach (var includeProperty in includes)
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+
+            return await query.AsNoTracking().ToPagedListAsync(requestParams.PageNumber, requestParams.PageSize);
         }
 
         public virtual async Task<T> GetSingleByCondition(Expression<Func<T, bool>> expression)

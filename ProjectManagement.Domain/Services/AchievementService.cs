@@ -26,7 +26,7 @@ namespace ProjectManagement.Domain.Services
 
         public async Task<DeveloperAchievementResponse> GetById(Guid developerId)
         {
-            var achievement = await _repositoryManager.AchievementRepository.GetSingleByCondition(x => x.DeveloperId == developerId);
+            var achievement = await _repositoryManager.AchievementRepository.GetSingleByCondition(x => x.Id == developerId);
             if (achievement == null) { return null; }
 
             var response = _mapper.Map<DeveloperAchievementResponse>(achievement);
@@ -47,7 +47,7 @@ namespace ProjectManagement.Domain.Services
 
         public async Task<bool> UpdateAsync([NotNull] UpdateDevAchievementRequest update)
         {
-            var achievement = await _repositoryManager.AchievementRepository.GetSingleByCondition(x => x.DeveloperId == update.DeveloperId);
+            var achievement = await _repositoryManager.AchievementRepository.GetSingleByCondition(x => x.Id == update.DeveloperId);
 
             achievement.UpdatedDate = DateTime.Now;
             achievement.OngoingProject = update.OngoingProject;
@@ -65,7 +65,7 @@ namespace ProjectManagement.Domain.Services
 
         public async Task<bool> DeleteAsync(Guid developerId)
         {
-            var achievement = await _repositoryManager.AchievementRepository.GetSingleByCondition(x => x.DeveloperId == developerId);
+            var achievement = await _repositoryManager.AchievementRepository.GetSingleByCondition(x => x.Id == developerId);
 
             if (achievement == null) { return false; }
 

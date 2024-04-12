@@ -14,9 +14,16 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+//builder.Services.AddDbContext<ApplicationDbContext>(option =>
+//{
+//    option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string error"));
+//});
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(connectionString));
+
+//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string error");
+//builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 
@@ -85,6 +92,22 @@ if (app.Environment.IsDevelopment())
             opt.SwaggerEndpoint(url, name);
         }
     });
+}
+else
+{
+    //app.UseSwagger();
+    //app.UseSwaggerUI(opt =>
+    //{
+    //    var descriptions = app.DescribeApiVersions();
+
+    //    //Build a Swagger enpoint for each discovered Api Version
+    //    foreach (var description in descriptions)
+    //    {
+    //        var url = $"/swagger/{description.GroupName}/swagger.json";
+    //        var name = description.GroupName.ToUpperInvariant();
+    //        opt.SwaggerEndpoint(url, name);
+    //    }
+    //});
 }
 
 //app.UseSerilogRequestLogging();   

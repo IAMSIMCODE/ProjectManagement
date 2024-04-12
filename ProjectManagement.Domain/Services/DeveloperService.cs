@@ -1,13 +1,16 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Newtonsoft.Json;
 using ProjectManagement.Domain.IRepository;
 using ProjectManagement.Domain.Models;
 using ProjectManagement.Domain.Models.DTO.Request;
 using ProjectManagement.Domain.Models.DTO.Response;
 using ProjectManagement.Domain.Models.Http;
+using ProjectManagement.Domain.Pagination;
 using ProjectManagement.Domain.Services.Interfaces;
 using ProjectManagement.Domain.Utility;
 using System.Diagnostics.CodeAnalysis;
+using X.PagedList;
 using static ProjectManagement.Domain.Models.Enums;
 
 namespace ProjectManagement.Domain.Services
@@ -34,6 +37,26 @@ namespace ProjectManagement.Domain.Services
             if (developers == null) { return null; }
 
             var result = _mapper.Map<List<GetDeveloperResponse>>(developers);
+            return result;
+        }
+
+        public async Task<List<GetDeveloperResponse>> GetPageList(RequestParams requestParams)
+        {
+            //var dev = await _repositoryManager.DeveloperRepository.GetAll(requestParams);
+
+            List<Developer> developers = new();
+
+            for (int i = 0; i < 60; i++)
+            {
+                developers.Add(new Developer { FirstName = "Test" });
+            }
+
+            var dev = await developers.ToPagedListAsync(requestParams.PageNumber, requestParams.PageSize);
+            //var developers = await _repositoryManager.DeveloperRepository.GetAllAsync(x => x.Status == 1,
+            //                                                                          x => x.OrderBy(x => x.AddedDate), "", false); ;
+            //if (developers == null) { return null; }
+
+            var result = _mapper.Map<List<GetDeveloperResponse>>(dev);
             return result;
         }
 
